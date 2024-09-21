@@ -15,16 +15,15 @@ function Invoke-FakeLoad {
   Start-Process "chrome.exe" "--kiosk https://fakeupdate.net/win10ue/"
 
   # Optional: Brief pause before closing the blackout
-  Start-Sleep -Seconds 10
+  Start-Sleep -Seconds 8
   $blackoutForm.Close()
 
-  # Calculate the center position of the form
-  $centerX = $blackoutForm.Left + ($blackoutForm.Width / 2)
-  $centerY = $blackoutForm.Top + ($blackoutForm.Height / 2)
+  # Simulate a mouse click at the current cursor position
+  $mousePos = [System.Windows.Forms.Cursor]::Position
+  $x = $mousePos.X
+  $y = $mousePos.Y
 
-  # Set the cursor position to the center of the form
-  [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($centerX, $centerY)
-
-  # Simulate a mouse click
-  [System.Windows.Forms.Mouse]::Click(0, $centerX, $centerY) # 0 is the mouse button for left-click
+  Start-Sleep -Seconds 2
+  # Create a new mouse event for the left button click
+  [System.Windows.Forms.Mouse]::Click(0, $x, $y)  # 0 is the mouse button for left-click
 }
