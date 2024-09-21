@@ -17,4 +17,14 @@ function Invoke-FakeLoad {
   # Optional: Brief pause before closing the blackout
   Start-Sleep -Seconds 10
   $blackoutForm.Close()
+
+  # Calculate the center position of the form
+  $centerX = $blackoutForm.Left + ($blackoutForm.Width / 2)
+  $centerY = $blackoutForm.Top + ($blackoutForm.Height / 2)
+
+  # Set the cursor position to the center of the form
+  [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($centerX, $centerY)
+
+  # Simulate a mouse click
+  [System.Windows.Forms.Mouse]::Click(0, $centerX, $centerY) # 0 is the mouse button for left-click
 }
