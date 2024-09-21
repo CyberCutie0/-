@@ -1,6 +1,6 @@
 function Invoke-FakeLoad {
   # Close all instances of Chrome before proceeding
-  Get-Process chrome -ErrorAction SilentlyContinue | Stop-Process -Force
+  Stop-Process -Name chrome -Force
 
   # Create a blackout window
   Add-Type -AssemblyName System.Windows.Forms
