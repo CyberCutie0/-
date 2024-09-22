@@ -14,7 +14,5 @@ function Invoke-FakeLoad {
   # Open the browser in kiosk mode with the specified URL
   Start-Process "chrome.exe" "--kiosk https://fakeupdate.net/win10ue/"
 
-  # Optional: Brief pause before closing the blackout
-  Start-Sleep -Seconds 3
   $blackoutForm.Close()
 }
