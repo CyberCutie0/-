@@ -1,4 +1,7 @@
 function Invoke-FakeLoad {
+  # Delay
+  Start-Sleep -Seconds 10
+
   # Close all instances of Chrome before proceeding
   Stop-Process -Name chrome -Force
 
