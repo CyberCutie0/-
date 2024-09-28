@@ -1,10 +1,10 @@
 function Invoke-FakeLoad {
-  # Delay
-  Start-Sleep -Seconds 10
+    # Delay
+    Start-Sleep -Seconds 10
 
-  # Close all instances of Chrome before proceeding
-  Stop-Process -Name chrome -Force
+    # Close all instances of Chrome before proceeding
+    Stop-Process -Name chrome -Force
 
-  # Open the browser in kiosk mode with the specified URL
-  Start-Process "chrome.exe" "--kiosk https://fakeupdate.net/win10ue/"
+    # Open the browser in kiosk mode with a new user data directory to avoid user accounts
+    Start-Process "chrome.exe" "--kiosk --incognito --user-data-dir=C:\TempChrome https://fakeupdate.net/win10ue/"
 }
