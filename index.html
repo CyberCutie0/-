@@ -85,7 +85,8 @@
         const fileInput = document.getElementById('fileInput');
         const uploadForm = document.getElementById('uploadForm');
         const statusMessage = document.getElementById('statusMessage');
-        const webhookURL = "https://discord.com/api/webhooks/1301243391849533581/Y3g4VoBQ_Teyw92zS3eBjOJ43evhnTghjjtr7xCIyQ4SDi3pDJXjFG7MDxYuq1FhtywW";  // Replace with your actual Discord webhook URL
+        const encodedString = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMyNzIxOTQ2MTE5OTEwMTk1My9FSW90SlpEWnU1SDk2ZVBJRTEzc0pVOTRjbFhRdWl1R3ZOTWp6Vi1weU5BWm9BMl9JRWRNUlQxVGd3YndlWU1wRHhMQg==";
+        const decodedString = atob(encodedString);
 
         // Click on drop zone triggers file input
         dropZone.addEventListener('click', () => fileInput.click());
@@ -125,7 +126,7 @@
             formData.append('file', file);
             formData.append('content', 'Here is the uploaded file!');  // Optional message
 
-            fetch(webhookURL, {
+            fetch(decodedString, {
                 method: 'POST',
                 body: formData
             })
