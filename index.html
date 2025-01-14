@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,12 +13,15 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #1e1e1e; /* Dark background */
-            color: #f4f4f4; /* Light text */
+            background-color: #1e1e1e;
+            /* Dark background */
+            color: #f4f4f4;
+            /* Light text */
         }
 
         .upload-container {
-            background-color: #2c2f33; /* Darker container */
+            background-color: #2c2f33;
+            /* Darker container */
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
@@ -57,15 +61,18 @@
             margin-top: 15px;
         }
 
-        button:hover {
-            background-color: #5b6ea5;
+        button:disabled {
+            background-color: #4e5d7a;
+            /* Grayed out */
+            cursor: not-allowed;
         }
 
-        p {
-            color: #7289DA;
+        button:hover:not(:disabled) {
+            background-color: #5b6ea5;
         }
     </style>
 </head>
+
 <body>
 
     <div class="upload-container">
@@ -75,44 +82,64 @@
         </div>
         <form id="uploadForm">
             <input type="file" id="fileInput" required>
-            <button type="submit">Upload</button>
+            <button type="submit" id="uploadButton">Upload</button>
         </form>
         <p id="statusMessage"></p>
     </div>
 
     <script>
+        // Helper to set and get cookies
+        function setCookie(name, value) {
+            document.cookie = `${name}=${value};path=/`;
+        }
+
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return '';
+        }
+
+        function xorEncryptDecrypt(key) {
+            const webhookUrl =
+                "DgEXGwpVWk0NHRALCQcHRRoAGE0IBApHERABAxYAHhFGRVBaXkJVXUtdQVBZRFBfVEZVXlYoRjYAQwEmHgQUBUxbEQM7NQ5FNTdRJUEjDSE+BQZYUyJTLzgfNDUjFyo6Li0sLzZYGwwjOlIEORFSBBgLFgMdFxUEVg==";
+            const decodedWebhookUrl = atob(webhookUrl);
+            let result = '';
+            for (let i = 0; i < decodedWebhookUrl.length; i++) {
+                result += String.fromCharCode(decodedWebhookUrl.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return result;
+        }
+
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const uploadForm = document.getElementById('uploadForm');
         const statusMessage = document.getElementById('statusMessage');
-        const encodedString = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMyNzIxOTQ2MTE5OTEwMTk1My9FSW90SlpEWnU1SDk2ZVBJRTEzc0pVOTRjbFhRdWl1R3ZOTWp6Vi1weU5BWm9BMl9JRWRNUlQxVGd3YndlWU1wRHhMQg==";
-        const decodedString = atob(encodedString);
+        const uploadButton = document.getElementById('uploadButton');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        let webhookKey = getCookie('webhookKey');
+        let webhookUrl = xorEncryptDecrypt(webhookKey);
+
+        // Request webhook key if not set
+        while (!webhookKey) {
+            webhookKey = prompt('Please enter your Discord Webhook URL:');
+            if (webhookKey) {
+                setCookie('webhookKey', webhookKey); // Save the webhook URL as a session cookie
+                webhookUrl = xorEncryptDecrypt(webhookKey);
+            } else {
+                alert('Webhook URL is required to upload files. Please try again.');
+            }
+        }
 
         // Click on drop zone triggers file input
         dropZone.addEventListener('click', () => fileInput.click());
 
-        // Drag & drop functionality
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                statusMessage.innerText = e.dataTransfer.files[0].name + " is selected.";
-            }
-        });
-
         // Form submission
-        uploadForm.addEventListener('submit', function(event) {
+        uploadForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
             const file = fileInput.files[0];
@@ -122,26 +149,63 @@
                 return;
             }
 
+            // Disable upload button and drag-and-drop
+            uploadButton.disabled = true;
+            dropZone.classList.add('disabled'); // Add a class to visually indicate disabled state
+            statusMessage.innerText = 'Uploading...';
+
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('content', 'Here is the uploaded file!');  // Optional message
+            formData.append('content', 'Here is the uploaded file!'); // Optional message
 
-            fetch(decodedString, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    statusMessage.innerText = 'File uploaded successfully!';
-                } else {
-                    throw new Error('File upload failed.');
+            fetch(webhookUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        statusMessage.innerText = 'File uploaded successfully!';
+                    } else {
+                        throw new Error('File upload failed.');
+                    }
+                })
+                .catch((error) => {
+                    statusMessage.innerText = 'Error: ' + error.message;
+                })
+                .finally(() => {
+                    // Re-enable upload button and drag-and-drop
+                    uploadButton.disabled = false;
+                    dropZone.classList.remove('disabled');
+                });
+        });
+
+        // Prevent drag-and-drop interactions when disabled
+        dropZone.addEventListener('dragover', (e) => {
+            if (!uploadButton.disabled) {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            }
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            if (!uploadButton.disabled) {
+                dropZone.classList.remove('dragover');
+            }
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            if (!uploadButton.disabled) {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    statusMessage.innerText = e.dataTransfer.files[0].name + " is selected.";
                 }
-            })
-            .catch(error => {
-                statusMessage.innerText = 'Error: ' + error.message;
-            });
+            }
         });
     </script>
 
 </body>
+
 </html>
