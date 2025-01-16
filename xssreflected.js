@@ -11,5 +11,3 @@ function clearHTML() {
     document.head.appendChild(script); // Add the script to the <head>
     document.body.innerHTML = "";
 }
-
-clearHTML();
