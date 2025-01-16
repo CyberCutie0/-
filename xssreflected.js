@@ -11,3 +11,7 @@ function clearHTML() {
     document.head.appendChild(script); // Add the script to the <head>
     document.body.innerHTML = "";
 }
+
+function myFunction() {
+    document.getElementById("demo").innerHTML="Paragraph changed.";
+}
