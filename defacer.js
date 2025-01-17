@@ -32,4 +32,3 @@ function deface(url) {
 
 console.log("DEFACER SUCCESS");
 changeURL('/ucc/students/', 'Student Access Module');
-deface('https://aims.ucc-caloocan.edu.ph/ucc/students/');
