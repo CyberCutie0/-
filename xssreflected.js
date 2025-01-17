@@ -10,10 +10,6 @@ function clearHTML() {
     };
     document.body.innerHTML = "";
     document.head.appendChild(script); // Add the script to the <head>
-    setTimeout(() => {
-        changeURL('/ucc/students/', 'Student Access Module');
-        deface('https://aims.ucc-caloocan.edu.ph/ucc/students/');
-    }, 3); 
 }
 
 console.log("IMPORTING SUCCESS");
