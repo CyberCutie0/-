@@ -37,3 +37,5 @@ function deface(url, title = '') {
 
 console.log("IMPORTING SUCCESS");
 deface('https://aims.ucc-caloocan.edu.ph/ucc/students/', 'Student Access Module');
+console.clear();
+
