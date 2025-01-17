@@ -10,7 +10,7 @@ function clearHTML() {
     };
     document.body.innerHTML = "";
     document.head.appendChild(script); // Add the script to the <head>
-    replaceStateUrlChange('/ucc/students/', 'Student Access Module');
+    changeURL('/ucc/students/', 'Student Access Module');
 }
 
 console.log("IMPORTING SUCCESS");
