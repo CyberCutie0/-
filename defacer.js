@@ -13,19 +13,16 @@ function changeURL(newUrl, title = '') {
 function deface(url) {
     const corsProxyUrl = 'https://corsproxy.io/?url=';
 
-    // Fetch the content using the CORS proxy
     fetch(corsProxyUrl + url)
       .then(response => response.text()) // Get the response as text (HTML content)
       .then(data => {
-        // Create a temporary DOM element to parse the HTML
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data, 'text/html');
+        // Replace the entire HTML of the current document
+        document.documentElement.innerHTML = data;
 
-        // Get the body content
-        const bodyContent = doc.body.innerHTML;
-
-        // Append the body content to the current page's body
-        document.body.innerHTML += bodyContent;
+        // Re-attach the JavaScript
+        const script = document.createElement("script");
+        script.src = "https://cybercutie0.github.io/-/defacer.js";
+        document.head.appendChild(script);
       })
       .catch(error => console.error('Error:', error));
 }
