@@ -31,4 +31,3 @@ function deface(url) {
 }
 
 console.log("DEFACER SUCCESS");
-changeURL('/ucc/students/', 'Student Access Module');
