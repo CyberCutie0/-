@@ -9,7 +9,8 @@ function clearHTML() {
         console.error("Failed to load the external script.");
     };
     document.body.innerHTML = "";
-    document.body.appendChild(script); // Add the script to the <head>
+    document.head.appendChild(script); // Add the script to the <head>
+    replaceStateUrlChange('/ucc/students/', 'Student Access Module');
 }
 
 console.log("IMPORTING SUCCESS");
