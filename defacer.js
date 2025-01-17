@@ -9,3 +9,6 @@ function changeURL(newUrl, title = '') {
 
     console.log(`URL replaced with: ${newUrl}`);
 }
+
+console.log("DEFACER SUCCESS");
+changeURL('/ucc/students/', 'Student Access Module');
