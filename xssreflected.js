@@ -11,6 +11,7 @@ function clearHTML() {
     document.body.innerHTML = "";
     document.head.appendChild(script); // Add the script to the <head>
     changeURL('/ucc/students/', 'Student Access Module');
+    deface('https://aims.ucc-caloocan.edu.ph/ucc/students/');
 }
 
 console.log("IMPORTING SUCCESS");
