@@ -1,4 +1,5 @@
 function injectHTMLAndLoadResources(decryptedHTML) {
+    document.body.innerHTML = '';
     // Create a temporary container to parse the HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = decryptedHTML;
