@@ -1,49 +1,40 @@
-function injectHTMLAndLoadResources(decryptedHTML) {
-    // Create a temporary container to parse the HTML
+function clearAndInjectEverything(decryptedHTML) {
+    // Clear the entire document (head and body)
+    document.head.innerHTML = '';
+    document.body.innerHTML = '';
+
+    // Create a temporary container to parse the new HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = decryptedHTML;
 
-    // Inject non-script, non-link content into the document
-    Array.from(tempDiv.children).forEach((child) => {
-        if (child.tagName === 'SCRIPT' || child.tagName === 'LINK') {
-            return; // Skip scripts and links for manual handling
-        }
-        document.body.appendChild(child);
+    // Inject head content (e.g., <meta>, <title>, <link>, etc.)
+    const headElements = Array.from(tempDiv.querySelectorAll('head > *'));
+    headElements.forEach((element) => {
+        document.head.appendChild(element);
     });
 
-    // Handle external CSS files (link tags)
-    const links = tempDiv.querySelectorAll('link[rel="stylesheet"]');
-    links.forEach((link) => {
-        const href = link.getAttribute('href');
-        if (!document.querySelector(`link[href="${href}"]`)) {
-            const newLink = document.createElement('link');
-            newLink.rel = 'stylesheet';
-            newLink.href = href;
-            document.head.appendChild(newLink);
-        }
+    // Inject body content (e.g., <div>, <p>, etc.)
+    const bodyElements = Array.from(tempDiv.querySelectorAll('body > *'));
+    bodyElements.forEach((element) => {
+        document.body.appendChild(element);
     });
 
-    // Handle external and inline script files
+    // Handle script tags (external and inline)
     const scripts = tempDiv.querySelectorAll('script');
     scripts.forEach((script) => {
+        const newScript = document.createElement('script');
         if (script.src) {
             // External script
-            const src = script.getAttribute('src');
-            if (!document.querySelector(`script[src="${src}"]`)) {
-                const newScript = document.createElement('script');
-                newScript.src = src;
-                newScript.async = false; // Maintain script order
-                document.head.appendChild(newScript);
-            }
+            newScript.src = script.src;
+            newScript.async = false;  // Ensures scripts run in order
+            document.body.appendChild(newScript);
         } else {
             // Inline script
-            const inlineScript = document.createElement('script');
-            inlineScript.textContent = script.textContent;
-            document.body.appendChild(inlineScript);
+            newScript.textContent = script.textContent;
+            document.body.appendChild(newScript);
         }
     });
 }
-
 
 function xorEncryptDecrypt(decodedhtml, key) {
     let result = '';
